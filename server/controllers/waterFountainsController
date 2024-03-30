@@ -1,0 +1,20 @@
+const db = require('../models/waterFountainsModels');
+
+const waterFountainsConroller = {}
+
+
+waterFountainsConroller.getWaterFountains = (req, res, next) => {
+    const latitude = req.body.position[0]
+    const longitude = req.body.position[1]
+    console.log(latitude, longitude)
+    const queryString = `SELECT point, point[0] as x, point[1] as y FROM "public"."fountains"` +
+    `order by Power(${longitude}-point[0],2) +  Power(${latitude}-point[1],2) ASC LIMIT 3`;
+    //console.log(queryString)
+    db.query(queryString)
+    .then(data => {
+        res.locals.locations = data.rows
+        return next()
+    })
+}
+
+module.exports = waterFountainsConroller
