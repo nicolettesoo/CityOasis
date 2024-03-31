@@ -58,9 +58,9 @@ const Map = (props) => {
     return <div>Error loading maps</div>;
   }
 
-  if (!isLoaded) {
-    return <div>Loading maps</div>;
-  }
+  // if (!isLoaded) {np
+  //   return <div>Loading maps</div>;
+  // }
 
  
 console.log('directions', directions)
