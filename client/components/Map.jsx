@@ -7,8 +7,9 @@ import { GoogleMap, useLoadScript, Marker, DirectionsRenderer} from '@react-goog
 
 const libraries = ['places'];
 const mapContainerStyle = {
-  width: '100vw',
-  height: '100vh',
+  width: '70vw',
+  height: '70vh',
+  borderRadius: '25px'
 };
 
 const Map = (props) => {
@@ -17,6 +18,7 @@ const Map = (props) => {
     libraries,
   });
   const [directions, setDirections] = useState()
+  const [center, setCenter] = useState()
 
   const directionsService = new window.google.maps.DirectionsService();
 
@@ -42,11 +44,15 @@ const Map = (props) => {
       }
   }, [props.currentFountain]);
 
+  useEffect(() => {
+    setCenter({
+      lat: props.lat, // default latitude
+      lng: props.lon, // default longitude
+    });
+    setDirections()
+  },[props.lat])
 
-  const center = {
-    lat: props.lat, // default latitude
-    lng: props.lon, // default longitude
-  };
+
 
   if (loadError) {
     return <div>Error loading maps</div>;
@@ -61,7 +67,7 @@ console.log('directions', directions)
   if(!props.lat) return (
     <div id ='map'></div>
   )
-  
+
   return (
     <div id = 'map'>
       <GoogleMap

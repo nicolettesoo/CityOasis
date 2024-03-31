@@ -6,14 +6,12 @@ const waterFountainsConroller = {}
 waterFountainsConroller.getWaterFountains = (req, res, next) => {
     const latitude = req.body.position[0]
     const longitude = req.body.position[1]
-    console.log(latitude, longitude)
     // const queryString = `SELECT point, point[0] as x, point[1] as y FROM "public"."fountains"` +
     // `order by Power(${longitude}-point[0],2) +  Power(${latitude}-point[1],2) ASC LIMIT 3`;
     const queryString = "SELECT point, point[0] as x, point[1] as y," +
-    "POW(69.1 * (40.781486::float -  point[1]::float), 2) +" +
-        "POW(69.1 * (point[0]::float - -73.982634::float) * COS(40.781486::float / 57.3), 2) as distance," + 
+    `(point(point) <@> point(${longitude},${latitude})) as distance,` + 
     "propname as location, position as description " +
-    "FROM fountains order by Power(-73.982634-point[0],2) +  Power(40.781486-point[1],2) ASC LIMIT 3;"
+    `FROM fountains order by 4 ASC LIMIT 3;`
     //console.log(queryString)
     db.query(queryString)
     .then(data => {
