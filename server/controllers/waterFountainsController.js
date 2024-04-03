@@ -8,10 +8,10 @@ waterFountainsConroller.getWaterFountains = (req, res, next) => {
     const longitude = req.body.position[1]
     // const queryString = `SELECT point, point[0] as x, point[1] as y FROM "public"."fountains"` +
     // `order by Power(${longitude}-point[0],2) +  Power(${latitude}-point[1],2) ASC LIMIT 3`;
-    const queryString = "SELECT point, point[0] as x, point[1] as y," +
+    const queryString = "SELECT fountain_id, point, point[0] as x, point[1] as y," +
     `(point(point) <@> point(${longitude},${latitude})) as distance,` + 
     "propname as location, position as description " +
-    `FROM fountains order by 4 ASC LIMIT 3;`
+    `FROM water_fountains order by 5 ASC LIMIT 3;`
     //console.log(queryString)
     db.query(queryString)
     .then(data => {

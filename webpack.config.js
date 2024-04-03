@@ -48,7 +48,8 @@ module.exports = {
     },
     proxy: [
       {
-        context: ['/getWaterFountains'],
+        context: ['/getWaterFountains', '/login', '/signup', '/logout', '/addDetails'],
+        secure: false,
         target: 'http://localhost:3000',
       },
     ],

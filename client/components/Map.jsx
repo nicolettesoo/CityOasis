@@ -63,7 +63,6 @@ const Map = (props) => {
   // }
 
  
-console.log('directions', directions)
   if(!props.lat) return (
     <div id ='map'></div>
   )
