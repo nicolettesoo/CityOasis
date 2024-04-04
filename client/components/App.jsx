@@ -3,7 +3,9 @@ import { render } from 'react-dom';
 import Map from './Map.jsx'
 import ClipLoader from "react-spinners/ClipLoader";
 import Modal from 'react-modal';
-import FountainModal from './FountainModal.jsx';
+import FountainLocation from './FountainLocation.jsx';
+import LoginButton from './LoginButton.jsx';
+import SignupButton from './SignupButton.jsx';
 
 
 Modal.setAppElement('#root')
@@ -16,24 +18,6 @@ const App = () => {
   const [locationLoading, setLocationLoading] = useState(false)
   let dataArray = []
 
-  const addDetails = (e, fountain_id) => {
-    console.log('fountainid', fountain_id)
-    e.preventDefault();
-    const body = {}
-    body.details = e.target[0].value
-    body.fountain_id = fountain_id
-    //console.log(body.position)
-    fetch('/addDetails', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'Application/JSON'
-        },
-        body: JSON.stringify(body)
-      })
-      .then(resp => resp.json())
-  }
-
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -41,52 +25,20 @@ const App = () => {
   }
 
   const handleClick = (e, fountainLongitude, fountainLatitude) => {
-    console.log('i am clicking')
-    console.log('fountain coords', fountainLatitude, fountainLongitude)
     setCurrentFountain({"latitude": fountainLatitude, "longitude":fountainLongitude})
-  }
-
-  const login = (e) =>  {
-    e.preventDefault();
-    const body = {}
-    body.username = e.target[0].value
-    body.password = e.target[1].value
-    fetch('/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'Application/JSON'
-      },
-      body: JSON.stringify(body)
-    })
-    .then(result => {
-      if (result.status == 500) {
-        alert('Please sign up')
-      }
-    })
-  }
-
-  const signup = (e) =>  {
-    e.preventDefault();
-    const body = {}
-    body.username = e.target[0].value
-    body.password = e.target[1].value
-    fetch('/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'Application/JSON'
-      },
-      body: JSON.stringify(body)
-    })
   }
 
   const logout = (e) =>  {
     fetch('/logout')
+    .then(resp => {
+      getFountains(lat, lon)
+    })
   }
 
   const getFountains = (latitude, longitude) => {
     const body = {}
     body.position = [latitude, longitude]
-
+    console.log([latitude, longitude])
     //console.log(body.position)
     fetch('/getWaterFountains', {
         method: 'POST',
@@ -128,18 +80,12 @@ const App = () => {
       })
   
     }
-    
-    for(let location of locations){
-      console.log('location fountain id', location.fountain_id)
-      dataArray.push(<button className="text-white bg-gradient-to-r from-cyan-500 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-large rounded-lg text-3xl px-5 py-2.5 text-center me-2 mb-2 h-60"
-      onClick={e => handleClick(e, location.x, location.y)}>
-        <p><span className="text-4xl font-bold text-cyan-200">Location:</span> <span>{location.location}</span></p>  
-        {location.description && <p><span className="text-4xl font-bold text-cyan-200">Details:</span> <span>{location.description}</span></p>} 
-        <p>{(location.distance).toFixed(2)} Miles</p>
-        <FountainModal fountain_id = {location.fountain_id} ></FountainModal>
-      </button>)
-      //dataArray.push(<button>{location.x} {location.y}</button>)
-    }
+    console.log(locations)
+
+    dataArray = locations.map((location) => { 
+      return <FountainLocation location={location} handleClick={handleClick} updateFountains={getFountains} userLocation={[lat, lon]}></FountainLocation>
+    })
+    console.log('dataArray is :' + dataArray)
 
     const handleChange = e => {
       const input = document.getElementById("locationInput");
@@ -147,25 +93,16 @@ const App = () => {
       const autocomplete = new google.maps.places.Autocomplete(input, {});
     }
 
-
-
     return (
-      <div className="container py-10 px-10 mx-0 min-w-full flex flex-col items-center">
-        <form onSubmit={e => (login(e))} className=" w-58 h-10 flex items-center border-b border-teal-500 py-2">
-            <input type="text" id = "username" name="name" className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-2xl " placeholder="Enter username" fontFamily="serif"/>
-            <input type="password" id = "password" name="name" className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-2xl " placeholder="Enter password" fontFamily="serif"/>
-          <input type="submit" value="Log in" className=" h-10 w-20 flex-shrink-0 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-xl px-3 py-2.5 text-center me-2 mb-2"/>
-        </form> 
-        <form onSubmit={e => (signup(e))} className=" w-58 h-10 flex items-center border-b border-teal-500 py-2">
-            <input type="text" id = "username" name="name" className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-2xl " placeholder="Enter username" fontFamily="serif"/>
-            <input type="password" id = "password" name="name" className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-2xl " placeholder="Enter password" fontFamily="serif"/>
-          <input type="submit" value="Sign up" className=" h-10 w-20 flex-shrink-0 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-xl px-3 py-2.5 text-center me-2 mb-2"/>
-        </form> 
+      <>
+        <LoginButton updateFountains={getFountains} userLocation={[lat, lon]}/>
+        <SignupButton/>
         <button 
           type = "button"
-          className="h-32 w-72 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-3xl px-5 py-2.5 text-center me-2 mb-2"
+          className=" h-10 w-32 flex-shrink-0 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-xl px-3 py-2.5 text-center me-2 mb-2"
           onClick={(e => logout(e))}>Log Out
         </button> 
+        <div className="container py-10 px-10 mx-0 min-w-full flex flex-col items-center">
         <div className="flex items-center space-x-48">
           <button 
             type = "button"
@@ -185,14 +122,14 @@ const App = () => {
               <input type="text" id = "locationInput" name="name" onChange={e => handleChange(e)} className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-4xl " placeholder="Enter address" fontFamily="serif"/>
             <input type="submit" value="Use address" className=" h-28 w-44 flex-shrink-0 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-2xl px-3 py-2.5 text-center me-2 mb-2"/>
             </form>
-        </div>
+          </div>
           <div className="flex items-center">
             <div className="flex flex-col h-auto">{dataArray}</div>
             <Map lat={lat} lon={lon} currentFountain={currentFountain}></Map>
         </div>
       </div>
+     </>
     )
-  
 }
 
 

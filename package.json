@@ -7,7 +7,7 @@
     "test": "test",
     "start": "cross-env NODE_ENV=production node server/server.js  & tailwindcss -i ./client/stylesheets/styles.css -o ./client/stylesheets/styles2.css --watch",
     "build": "cross-env NODE_ENV=production webpack",
-    "dev": "NODE_ENV=development webpack serve --open & NODE_ENV=development node server/server.js & tailwindcss -i ./client/stylesheets/styles.css -o ./client/stylesheets/styles2.css --watch"
+    "dev": "NODE_ENV=development webpack serve --open & NODE_ENV=development & nodemon server/server.js & tailwindcss -i ./client/stylesheets/styles.css -o ./client/stylesheets/styles2.css --watch"
   },
   "repository": {
     "type": "git",

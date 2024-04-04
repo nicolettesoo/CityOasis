@@ -15,7 +15,15 @@ addDetailsController.insertNotes = (req, res, next) => {
     .then(data => {
         return next()
     })
-    return next()
+}
+
+addDetailsController.editNotes = (req,res,next) => {
+    console.log('i am in editnotes', req.body)
+    const queryString = `UPDATE usernotes SET notes = '${req.body.details}' WHERE fountain_id=${req.body.fountain_id}`
+    db.query(queryString)
+    .then(data => {
+        return next()
+    })
 }
 
 

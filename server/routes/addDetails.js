@@ -16,4 +16,10 @@ router.post('/',
   return res.sendStatus(200)
 });
 
+router.put('/', 
+  addDetailsController.editNotes,
+  (req, res) => {
+  return res.sendStatus(200)
+});
+
 module.exports = router
