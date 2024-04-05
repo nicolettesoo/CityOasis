@@ -22,4 +22,10 @@ router.put('/',
   return res.sendStatus(200)
 });
 
+router.delete('/', 
+  addDetailsController.deleteNotes,
+  (req, res) => {
+  return res.sendStatus(200)
+});
+
 module.exports = router

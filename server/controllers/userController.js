@@ -5,8 +5,6 @@ const bcrypt = require('bcrypt');
 const userController = {}
 
 userController.verifyUser = (req, res, next) => {
-    console.log('i am in verify user')
-    //console.log(req.body)
     const {username, password} = req.body
     models.Users.findOne({username: username})
     .then(result => {
@@ -42,16 +40,13 @@ userController.verifyUser = (req, res, next) => {
     }
 
 userController.createUser = (req, res, next) => {
-    console.log('in create user', req.body)
     const { username, password } = req.body;
     if (username && password) {
-        console.log(username)
     models.Users.create({
         username: username,
         password: password
       })
       .then((result) => {
-        console.log('I stored this in my database', result)
         return next()
       })
       .catch(err => next({ error: 'Error in createUser' }))

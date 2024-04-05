@@ -19,12 +19,22 @@ addDetailsController.insertNotes = (req, res, next) => {
 
 addDetailsController.editNotes = (req,res,next) => {
     console.log('i am in editnotes', req.body)
-    const queryString = `UPDATE usernotes SET notes = '${req.body.details}' WHERE fountain_id=${req.body.fountain_id}`
+    const response = jwt.verify(req.cookies.authorization, SECRET_KEY)
+    const queryString = `UPDATE usernotes SET notes = '${req.body.details}' WHERE fountain_id=${req.body.fountain_id} AND username='${response.username}'`
     db.query(queryString)
     .then(data => {
         return next()
     })
 }
 
+addDetailsController.deleteNotes = (req,res,next) => {
+    console.log('i am in deleteNotes', req.body)
+    const response = jwt.verify(req.cookies.authorization, SECRET_KEY)
+    const queryString = `DELETE FROM usernotes WHERE fountain_id=${req.body.fountain_id} AND username='${response.username}'`
+    db.query(queryString)
+    .then(data => {
+        return next()
+    })
+}
 
 module.exports = addDetailsController;

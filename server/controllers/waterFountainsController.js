@@ -31,7 +31,6 @@ waterFountainsConroller.getWaterFountains = (req, res, next) => {
         "propname as location, position as description " +
         `FROM water_fountains order by 5 ASC LIMIT 3;`
     }
-    console.log(queryString)
 
 
     db.query(queryString)

@@ -10,7 +10,6 @@ const SECRET_KEY = process.env.TOKEN_KEY
 
 sessionController.startSession = (req, res, next) => {
     //write code here
-    console.log('secret key', SECRET_KEY)
     const token = jwt.sign({"username": req.body.username}, SECRET_KEY)
     res.cookie('authorization', token)
     //res.locals.jwtToken = token;
@@ -19,11 +18,9 @@ sessionController.startSession = (req, res, next) => {
   };
 
   sessionController.isLoggedIn = (req,res,next) => {
-    console.log('I am requesting cookies', req.cookies)
     try {
         const response = jwt.verify(req.cookies.authorization, SECRET_KEY)
-        // console.log('jwt response is: ',response)
-        console.log('jwt username is: ',response.username)
+        console.log('response in isloggedin is: ', response)
         return next()
     }
     catch (err) {

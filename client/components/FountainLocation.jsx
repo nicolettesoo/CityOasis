@@ -17,6 +17,7 @@ const FountainLocation = (props) => {
                 notes={location.notes} 
                 updateFountains={props.updateFountains}
                 userLocation = {props.userLocation}
+                setIsLoggedIn={props.setIsLoggedIn}
             ></FountainFooter>
       </button>
     )

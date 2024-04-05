@@ -3,11 +3,32 @@ import Modal from 'react-modal';
 
 Modal.setAppElement('#root')
 
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    width: '70%',
+    height: '70%'
+  },
+};
 
 const LoginButton = (props) => {
-    let subtitle;
     const [modalIsOpen, setIsOpen] = useState(false)
+    //const [isLoggedIn, setIsLoggedIn] = useState()
 
+
+    // useEffect(() => {
+    //   fetch('/isLoggedIn')
+    //   .then(result => {
+    //       setIsLoggedIn(!(result.status == 500))
+    //   })
+    // },[modalIsOpen])
+    // console.log('is logged in : ',isLoggedIn)
+    
     const login = (e) =>  {
         e.preventDefault();
         const body = {}
@@ -23,8 +44,10 @@ const LoginButton = (props) => {
         .then(result => {
           if (result.status == 500) {
             alert('Please sign up')
+            return
           }
           props.updateFountains(props.userLocation[0], props.userLocation[1])
+          props.setIsLoggedIn(true)
         })
       }
     
@@ -33,10 +56,6 @@ const LoginButton = (props) => {
         setIsOpen(true);
       }
     
-      function afterOpenModal() {
-        // references are now sync'd and can be accessed.
-        subtitle.style.color = '#f00';
-      }
     
       function closeModal() {
         setIsOpen(false);
@@ -44,21 +63,33 @@ const LoginButton = (props) => {
 
     return(
     <div>
-      <button onClick={openModal} className=" h-10 w-32 flex-shrink-0 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-xl px-3 py-2.5 text-center me-2 mb-2">Login</button>
-      <Modal
+      {!props.isLoggedIn && <button onClick={openModal} className=" h-10 w-32 flex-shrink-0 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-xl px-3 py-2.5 text-center me-2 mb-2">Login</button>}
+      {!props.isLoggedIn && <Modal
         isOpen={modalIsOpen}
-        onAfterOpen={afterOpenModal}
         onRequestClose={closeModal}
         contentLabel="Example Modal"
+        className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+        style={customStyles}
       >
-        <h2 ref={(_subtitle) => (subtitle = _subtitle)}>Please log in</h2>
-        <button onClick={closeModal}>close</button>
+        <button className="text-2xl text-red-500 background-transparent font-bold uppercase px-6 py-2 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        onClick={closeModal}>Exit</button>
         <form onSubmit={e => (login(e))} className=" w-58 h-10 flex items-center border-b border-teal-500 py-2">
             <input type="text" id = "username" name="name" className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-2xl " placeholder="Enter username" fontFamily="serif"/>
             <input type="password" id = "password" name="name" className="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none text-2xl " placeholder="Enter password" fontFamily="serif"/>
-            <input type="submit" value="Log in" className=" h-10 w-20 flex-shrink-0 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-xl px-3 py-2.5 text-center me-2 mb-2"/>
+            <input type="submit" value="Log in" className=" h-10 w-20 text-lg flex-shrink-0 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-xl px-3 py-2 text-center me-2 mb-2"/>
         </form> 
-      </Modal>
+      </Modal>}
+      {props.isLoggedIn && <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Example Modal"
+        className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+        style={customStyles}
+      >
+        <button className="text-2xl text-red-500 background-transparent font-bold uppercase px-6 py-2 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        onClick={closeModal}>Exit</button>
+        <p className='text-3xl h-44 w-96 text-indigo-700'>You are logged in</p>
+      </Modal>}
     </div>
     )
 }
