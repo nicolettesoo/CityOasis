@@ -11,7 +11,7 @@ const mapContainerStyle = {
   height: '70vh',
   borderRadius: '25px'
 };
-
+let directionsService
 const Map = (props) => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: 'AIzaSyCzWRVuy_IO3RyiAqvb5P3YlIT8Xp3jdew',
@@ -20,7 +20,10 @@ const Map = (props) => {
   const [directions, setDirections] = useState()
   const [center, setCenter] = useState()
 
-  const directionsService = new window.google.maps.DirectionsService();
+  if(isLoaded) {
+    console.log("I am loaded")
+    directionsService = new google.maps.DirectionsService();
+  }
 
   useEffect(() => {
     // Update the document title using the browser API
@@ -29,10 +32,10 @@ const Map = (props) => {
             {
                 origin: `${props.lat},${props.lon}`,
                 destination: `${props.currentFountain.latitude},${props.currentFountain.longitude}`,
-                travelMode: window.google.maps.TravelMode.WALKING
+                travelMode: google.maps.TravelMode.WALKING
             },
             (result, status) => {
-                if (status === window.google.maps.DirectionsStatus.OK) {
+                if (status === google.maps.DirectionsStatus.OK) {
                     console.log('status ok')
                     setDirections(result)
                 } else {
@@ -45,11 +48,13 @@ const Map = (props) => {
   }, [props.currentFountain]);
 
   useEffect(() => {
-    setCenter({
-      lat: props.lat, // default latitude
-      lng: props.lon, // default longitude
-    });
-    setDirections()
+    if(props.lat && props.lon){
+      setCenter({
+        lat: props.lat, // default latitude
+        lng: props.lon, // default longitude
+      });
+      setDirections()
+    }
   },[props.lat])
 
 
@@ -58,9 +63,9 @@ const Map = (props) => {
     return <div>Error loading maps</div>;
   }
 
-  // if (!isLoaded) {np
-  //   return <div>Loading maps</div>;
-  // }
+  if (!isLoaded) {
+    return <div>Loading maps</div>;
+  }
 
  
   if(!props.lat) return (
@@ -68,6 +73,8 @@ const Map = (props) => {
   )
 
   return (
+    <>
+    {isLoaded && 
     <div id = 'map'>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
@@ -78,6 +85,8 @@ const Map = (props) => {
         {directions && <DirectionsRenderer directions={directions} />}
       </GoogleMap>
     </div>
+    }
+    </>
   );
 };
 

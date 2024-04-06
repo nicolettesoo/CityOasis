@@ -8,7 +8,9 @@ import SignupButton from './SignupButton.jsx';
 import AddressInputForm from './AddressInputForm.jsx';
 import LogoutButton from './LogoutButton.jsx';
 import CurrentLocation from './CurrentLocation.jsx';
+import { GoogleMap, useLoadScript, Marker, DirectionsRenderer} from '@react-google-maps/api';
 
+const libraries = ['places'];
 Modal.setAppElement('#root')
 
 const App = () => {
