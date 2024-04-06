@@ -18,6 +18,7 @@ const customStyles = {
 
 const LoginButton = (props) => {
     const [modalIsOpen, setIsOpen] = useState(false)
+    const [hasAnAccount, setHasAnAccount] = useState(true)
     //const [isLoggedIn, setIsLoggedIn] = useState()
 
 
@@ -43,11 +44,13 @@ const LoginButton = (props) => {
         })
         .then(result => {
           if (result.status == 500) {
-            alert('Please sign up')
+            //alert('Please sign up')
+            setHasAnAccount(false)
             return
           }
           props.updateFountains(props.userLocation[0], props.userLocation[1])
           props.setIsLoggedIn(true)
+          setHasAnAccount(true)
         })
       }
     
@@ -59,12 +62,13 @@ const LoginButton = (props) => {
     
       function closeModal() {
         setIsOpen(false);
+        setHasAnAccount(true)
       }
 
     return(
     <div>
-      {!props.isLoggedIn && <button onClick={openModal} className=" h-10 w-32 flex-shrink-0 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-xl px-3 py-2.5 text-center me-2 mb-2">Login</button>}
-      {!props.isLoggedIn && <Modal
+      {!props.isLoggedIn && <button onClick={openModal} className="float-right h-10 w-32 flex-shrink-0 mx-120 text-white bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 font-medium font-serif rounded-lg text-xl px-3 py-2.5 text-center me-2 mb-2">Login</button>}
+      {!props.isLoggedIn && hasAnAccount && <Modal
         isOpen={modalIsOpen}
         onRequestClose={closeModal}
         contentLabel="Example Modal"
@@ -86,9 +90,20 @@ const LoginButton = (props) => {
         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
         style={customStyles}
       >
-        <button className="text-2xl text-red-500 background-transparent font-bold uppercase px-6 py-2 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-        onClick={closeModal}>Exit</button>
-        <p className='text-3xl h-44 w-96 text-indigo-700'>You are logged in</p>
+            <button className="text-lg text-red-500 background-transparent font-bold uppercase px-6 py-2 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+            onClick={closeModal}>Exit</button>
+            <p className='px-14 text-indigo-500 text-3xl background-transparent font-bold uppercase px-6 py-2 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'>You are logged in!</p>
+      </Modal>}
+      {!hasAnAccount && <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={closeModal}
+        contentLabel="Example Modal"
+        className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+        style={customStyles}
+      >
+         <button className="text-lg text-red-500 background-transparent font-bold uppercase px-6 py-2 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+          onClick={closeModal}>Exit</button>
+          <p className='px-14 text-indigo-500 text-3xl background-transparent font-bold uppercase px-6 py-2 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'>Please sign up</p>
       </Modal>}
     </div>
     )

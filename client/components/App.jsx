@@ -83,7 +83,7 @@ const App = () => {
     }
 
     dataArray = locations.map((location) => { 
-      return <FountainLocation location={location} handleClick={handleClick} updateFountains={getFountains} userLocation={[lat, lon]}></FountainLocation>
+      return <FountainLocation location={location} handleClick={handleClick} updateFountains={getFountains} userLocation={[lat, lon]} setIsLoggedIn={setIsLoggedIn}></FountainLocation>
     })
 
     const handleChange = e => {
@@ -92,9 +92,9 @@ const App = () => {
     }
 
     return (
-      <>
+      <>        
+        <SignupButton updateFountains={getFountains} userLocation={[lat, lon]} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
         <LoginButton updateFountains={getFountains} userLocation={[lat, lon]} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
-        <SignupButton/>
         <LogoutButton getFountains={getFountains} lat={lat} lon={lon} setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn} />
         <div className="container py-10 px-10 mx-0 min-w-full flex flex-col items-center">
         <div className="flex items-center space-x-48">

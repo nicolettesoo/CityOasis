@@ -1,9 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import FountainModal from './FountainModal.jsx';
+import Modal from 'react-modal';
+
+
+Modal.setAppElement('#root')
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+    width: '70%',
+    height: '70%'
+  },
+};
 
 const FountainFooter = (props) => {
     let subtitle;
     const [modalIsOpen, setIsOpen] = useState(false)
+    const [loggedIn, setLoggedIn] = useState(true)
 
     function openModal() {
       //redirect to login 
@@ -11,11 +29,15 @@ const FountainFooter = (props) => {
       //when complete then
       .then(result => {
         if (result.status == 500) {
-          alert('Please log in')
+          //alert('Please log in')
+          setLoggedIn(false)
+          setIsOpen(true)
+          console.log('loggedin', loggedIn)
         }
         else {
           setIsOpen(true)
           props.setIsLoggedIn(true)
+          setLoggedIn(true)
         }
       })
       .catch(err => console.log(err))
@@ -39,10 +61,21 @@ const FountainFooter = (props) => {
               <path stroke="none" d="M0 0h24v24H0z"/>  <circle cx="12" cy="12" r="2" />  <path d="M2 12l1.5 2a11 11 0 0 0 17 0l1.5 -2" />  <path d="M2 12l1.5 -2a11 11 0 0 1 17 0l1.5 2" />
             </svg>
           }
-          <FountainModal 
+          {loggedIn && <FountainModal 
             fountain_id = {props.fountain_id} hasnote = {props.hasnote} notes = {props.notes} openModal={openModal} 
             updateCloseModal={closeModal} modalIsOpen = {modalIsOpen}
-          />
+          />}
+          {!loggedIn && <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Example Modal"
+          className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          style={customStyles}
+        >
+           <button className="text-lg text-red-500 background-transparent font-bold uppercase px-6 py-2 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+          onClick={closeModal}>Exit</button>
+          <p className='px-14 text-indigo-500 text-3xl background-transparent font-bold uppercase px-6 py-2 outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'>Please log in</p>
+        </Modal>}
         </>
     )
 }
