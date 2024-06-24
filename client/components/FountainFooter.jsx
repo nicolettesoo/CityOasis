@@ -18,6 +18,8 @@ const customStyles = {
   },
 };
 
+//fountain footer component
+
 const FountainFooter = (props) => {
     let subtitle;
     const [modalIsOpen, setIsOpen] = useState(false)
